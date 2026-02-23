@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Orders Management Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#136dec",
+                        "background-light": "#ffffff",
+                        "surface-light": "#ffffff",
+                        "border-light": "#e2e8f0",
+                        "text-main": "#0f172a",
+                        "text-secondary": "#64748b",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .status-badge-pending {
+                @apply bg-amber-50 text-amber-900 border border-amber-200;
+            }
+            .status-badge-processing {
+                @apply bg-blue-50 text-blue-900 border border-blue-200;
+            }
+            .status-badge-shipped {
+                @apply bg-indigo-50 text-indigo-900 border border-indigo-200;
+            }
+            .status-badge-delivered {
+                @apply bg-emerald-50 text-emerald-900 border border-emerald-200;
+            }
+            .status-badge-returned {
+                @apply bg-rose-50 text-rose-900 border border-rose-200;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-display text-text-main min-h-screen flex flex-col overflow-x-hidden antialiased">
+<header class="sticky top-0 z-50 flex items-center justify-between border-b border-border-light bg-surface-light px-6 py-4 lg:px-10 shadow-sm/50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-text-main">
+<div class="size-8 rounded bg-primary flex items-center justify-center text-white shadow-md shadow-primary/20">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight">NexusAdmin</h2>
+</div>
+<label class="hidden md:flex flex-col min-w-40 w-full max-w-sm h-11 group">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-white border border-gray-200 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all shadow-sm">
+<div class="text-text-secondary flex items-center justify-center pl-3">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="w-full flex-1 bg-transparent border-none text-text-main placeholder:text-text-secondary focus:ring-0 px-3 text-sm font-medium" placeholder="Search orders, customers..."/>
+</div>
+</label>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-text-secondary hover:text-primary text-sm font-semibold transition-colors" href="#">Overview</a>
+<a class="text-primary text-sm font-bold bg-primary/5 px-3 py-1.5 rounded-full" href="#">Orders</a>
+<a class="text-text-secondary hover:text-primary text-sm font-semibold transition-colors" href="#">Customers</a>
+<a class="text-text-secondary hover:text-primary text-sm font-semibold transition-colors" href="#">Analytics</a>
+</nav>
+<div class="flex items-center gap-3 border-l border-gray-200 pl-6">
+<button class="flex items-center justify-center size-10 rounded-lg hover:bg-gray-100 text-text-secondary transition-colors relative">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 size-2 bg-red-500 rounded-full border-2 border-surface-light"></span>
+</button>
+<button class="flex items-center justify-center size-10 rounded-full bg-gray-200 overflow-hidden ring-2 ring-transparent hover:ring-gray-200 transition-all">
+<img alt="User Profile" class="size-full object-cover" data-alt="Portrait of a smiling man with a beard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXC8jvr6N8xMI457tDa0HnxRSoDVJnP-wM9XfQB2OPpH2S88QvZ4OLEZw8O4wlLKb-i5hLhoZZCHwJngc8jTtqzAja72SCOIL-mbqK0gq_jR0oJIONV9wQW9uJeB-H7bt2y5ShfZ5mv1hothdYMMB7X2UNRU4FNM45bgm_digD-7OViRBIub2H8IE5IcGt6aadthvjpMNuHMuXlBndliOWgaAlDwSW0pqBFSL4igqRpbVWjnhFCnxy3CrEUfHqyLLUXrXSLCankA"/>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-1 w-full max-w-[1440px] mx-auto p-6 md:p-8 lg:p-12 flex flex-col gap-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="flex flex-col gap-2">
+<h1 class="text-text-main text-4xl font-extrabold tracking-tight">Orders Management</h1>
+<p class="text-text-secondary text-base">Manage, track, and update recent customer orders efficiently.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center gap-2 h-11 px-5 rounded-lg border border-gray-200 bg-white text-text-main text-sm font-semibold hover:bg-gray-50 shadow-sm transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Export CSV</span>
+</button>
+<button class="flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-primary hover:bg-blue-600 text-white text-sm font-semibold shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Create Order</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+<button class="flex flex-col items-start gap-3 p-4 rounded-xl bg-primary text-white shadow-xl shadow-primary/20 ring-2 ring-primary ring-offset-2 ring-offset-white transition-all transform hover:-translate-y-0.5">
+<div class="flex items-center justify-between w-full">
+<span class="text-xs font-bold uppercase opacity-90 tracking-wide">All Orders</span>
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</div>
+<span class="text-3xl font-bold">1,248</span>
+</button>
+<button class="group flex flex-col items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-100 transition-all">
+<div class="flex items-center justify-between w-full text-text-secondary group-hover:text-amber-600">
+<span class="text-xs font-bold uppercase tracking-wide">Pending</span>
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+</div>
+<span class="text-3xl font-bold text-text-main group-hover:text-amber-600">42</span>
+</button>
+<button class="group flex flex-col items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-100 transition-all">
+<div class="flex items-center justify-between w-full text-text-secondary group-hover:text-blue-600">
+<span class="text-xs font-bold uppercase tracking-wide">Processing</span>
+<span class="material-symbols-outlined text-[20px]">sync</span>
+</div>
+<span class="text-3xl font-bold text-text-main group-hover:text-blue-600">86</span>
+</button>
+<button class="group flex flex-col items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-100 transition-all">
+<div class="flex items-center justify-between w-full text-text-secondary group-hover:text-indigo-600">
+<span class="text-xs font-bold uppercase tracking-wide">Shipped</span>
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+</div>
+<span class="text-3xl font-bold text-text-main group-hover:text-indigo-600">315</span>
+</button>
+<button class="group flex flex-col items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-100 transition-all">
+<div class="flex items-center justify-between w-full text-text-secondary group-hover:text-emerald-600">
+<span class="text-xs font-bold uppercase tracking-wide">Delivered</span>
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<span class="text-3xl font-bold text-text-main group-hover:text-emerald-600">790</span>
+</button>
+<button class="group flex flex-col items-start gap-3 p-4 rounded-xl bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-100 transition-all">
+<div class="flex items-center justify-between w-full text-text-secondary group-hover:text-rose-600">
+<span class="text-xs font-bold uppercase tracking-wide">Returns</span>
+<span class="material-symbols-outlined text-[20px]">assignment_return</span>
+</div>
+<span class="text-3xl font-bold text-text-main group-hover:text-rose-600">15</span>
+</button>
+</div>
+<div class="w-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-gray-50/50 border-b border-gray-200">
+<tr>
+<th class="py-5 px-6 text-xs font-bold uppercase text-text-secondary tracking-wider">Order ID</th>
+<th class="py-5 px-6 text-xs font-bold uppercase text-text-secondary tracking-wider">Customer Name</th>
+<th class="py-5 px-6 text-xs font-bold uppercase text-text-secondary tracking-wider">Date</th>
+<th class="py-5 px-6 text-xs font-bold uppercase text-text-secondary tracking-wider">Total Value</th>
+<th class="py-5 px-6 text-xs font-bold uppercase text-text-secondary tracking-wider">Status</th>
+<th class="py-5 px-6 text-xs font-bold uppercase text-text-secondary tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100">
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-6 px-6">
+<span class="font-bold text-text-main">#ORD-7829</span>
+</td>
+<td class="py-6 px-6">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">AF</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-sm font-bold text-text-main">Alice Freeman</span>
+<span class="text-xs text-text-secondary font-medium">alice@example.com</span>
+</div>
+</div>
+</td>
+<td class="py-6 px-6 text-sm font-medium text-text-secondary">Oct 24, 2023</td>
+<td class="py-6 px-6 text-sm font-bold text-text-main">$124.50</td>
+<td class="py-6 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold status-badge-pending">
+<span class="size-1.5 rounded-full bg-amber-600 mr-2"></span>
+                                Pending
+                            </span>
+</td>
+<td class="py-6 px-6 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors p-2 rounded-full hover:bg-gray-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-6 px-6">
+<span class="font-bold text-text-main">#ORD-7828</span>
+</td>
+<td class="py-6 px-6">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm">MW</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-sm font-bold text-text-main">Mark Wilson</span>
+<span class="text-xs text-text-secondary font-medium">mark.w@example.com</span>
+</div>
+</div>
+</td>
+<td class="py-6 px-6 text-sm font-medium text-text-secondary">Oct 24, 2023</td>
+<td class="py-6 px-6 text-sm font-bold text-text-main">$89.00</td>
+<td class="py-6 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold status-badge-processing">
+<span class="size-1.5 rounded-full bg-blue-600 mr-2 animate-pulse"></span>
+                                Processing
+                            </span>
+</td>
+<td class="py-6 px-6 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors p-2 rounded-full hover:bg-gray-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-6 px-6">
+<span class="font-bold text-text-main">#ORD-7827</span>
+</td>
+<td class="py-6 px-6">
+<div class="flex items-center gap-4">
+<img alt="Sarah Connor" class="size-10 rounded-full object-cover ring-1 ring-gray-200" data-alt="Close up of woman smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdKqRtdRMRNd6aWdL4VeFnIDqhLeJjpDqwRq8rToxTYk5XI3QAxkdsRiE3mx_6gabIIC82XvFQWzQLsxIwUUuPVf86-1pohbIi10w0EnEYHacMq2whr9vTrzyVLvEAX-h5364VQdcu4aNqxxaZY5xZNCi4FJKPVcnh6KV_E5qZfNB6KJSV1xMwcQJmTwMjfVGUcDnkRQ6ho5FwimqerIpaApZGswqLU5TZZz8oZkXdIkuusVOTbh5YgYgeGWucxmN4obYNmL6_iA"/>
+<div class="flex flex-col gap-0.5">
+<span class="text-sm font-bold text-text-main">Sarah Connor</span>
+<span class="text-xs text-text-secondary font-medium">sarah.c@skynet.com</span>
+</div>
+</div>
+</td>
+<td class="py-6 px-6 text-sm font-medium text-text-secondary">Oct 23, 2023</td>
+<td class="py-6 px-6 text-sm font-bold text-text-main">$245.20</td>
+<td class="py-6 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold status-badge-shipped">
+<span class="size-1.5 rounded-full bg-indigo-600 mr-2"></span>
+                                Shipped
+                            </span>
+</td>
+<td class="py-6 px-6 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors p-2 rounded-full hover:bg-gray-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-6 px-6">
+<span class="font-bold text-text-main">#ORD-7826</span>
+</td>
+<td class="py-6 px-6">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-green-50 border border-green-100 flex items-center justify-center text-green-700 font-bold text-sm">JD</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-sm font-bold text-text-main">John Doe</span>
+<span class="text-xs text-text-secondary font-medium">john.doe@unknown.com</span>
+</div>
+</div>
+</td>
+<td class="py-6 px-6 text-sm font-medium text-text-secondary">Oct 23, 2023</td>
+<td class="py-6 px-6 text-sm font-bold text-text-main">$55.00</td>
+<td class="py-6 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold status-badge-delivered">
+<span class="size-1.5 rounded-full bg-emerald-600 mr-2"></span>
+                                Delivered
+                            </span>
+</td>
+<td class="py-6 px-6 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors p-2 rounded-full hover:bg-gray-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-6 px-6">
+<span class="font-bold text-text-main">#ORD-7825</span>
+</td>
+<td class="py-6 px-6">
+<div class="flex items-center gap-4">
+<img alt="Emily Blunt" class="size-10 rounded-full object-cover ring-1 ring-gray-200" data-alt="Portrait of a young woman smiling slightly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXsJQX9CODYvUIS0804sgl_UOC7RqzcZtN49Lu71iNbNiPC9AIM92cnNnMoSE7iyqSd1NrfOrGN0SwkEtwDOZMu3nD2CLzDYsmIlYdRyO71yo8sOdgcS54FbMJjwpL92HPa05dzDSoFjw5ozAoLTxEXRcTFUdN9ox35xMp9cLMDzr0yz5SE-CvHZ1D1itkjoVNExB8OSxP-alOdKckWoYuFDc7tKiOgHmfVNuZP0-hCJI2JkAutsrlbOI7Xb0Cw05srmKse0gAhg"/>
+<div class="flex flex-col gap-0.5">
+<span class="text-sm font-bold text-text-main">Emily Blunt</span>
+<span class="text-xs text-text-secondary font-medium">emily.b@studio.com</span>
+</div>
+</div>
+</td>
+<td class="py-6 px-6 text-sm font-medium text-text-secondary">Oct 22, 2023</td>
+<td class="py-6 px-6 text-sm font-bold text-text-main">$310.75</td>
+<td class="py-6 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold status-badge-delivered">
+<span class="size-1.5 rounded-full bg-emerald-600 mr-2"></span>
+                                Delivered
+                            </span>
+</td>
+<td class="py-6 px-6 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors p-2 rounded-full hover:bg-gray-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gray-50/80 transition-colors">
+<td class="py-6 px-6">
+<span class="font-bold text-text-main">#ORD-7824</span>
+</td>
+<td class="py-6 px-6">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-700 font-bold text-sm">MS</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-sm font-bold text-text-main">Michael Scott</span>
+<span class="text-xs text-text-secondary font-medium">michael@dunder.com</span>
+</div>
+</div>
+</td>
+<td class="py-6 px-6 text-sm font-medium text-text-secondary">Oct 22, 2023</td>
+<td class="py-6 px-6 text-sm font-bold text-text-main">$42.00</td>
+<td class="py-6 px-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold status-badge-returned">
+<span class="size-1.5 rounded-full bg-rose-600 mr-2"></span>
+                                Returned
+                            </span>
+</td>
+<td class="py-6 px-6 text-right">
+<button class="text-gray-400 hover:text-primary transition-colors p-2 rounded-full hover:bg-gray-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-gray-200 bg-gray-50/50">
+<span class="text-sm text-text-secondary font-medium">
+                Showing <span class="font-bold text-text-main">1</span> to <span class="font-bold text-text-main">10</span> of <span class="font-bold text-text-main">1,248</span> results
+            </span>
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center size-9 rounded-lg border border-gray-200 bg-white text-text-secondary hover:bg-gray-50 hover:text-text-main disabled:opacity-50 transition-all shadow-sm">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="flex items-center justify-center size-9 rounded-lg bg-primary text-white font-bold text-sm shadow-md shadow-primary/20">1</button>
+<button class="flex items-center justify-center size-9 rounded-lg border border-gray-200 bg-white text-text-secondary hover:bg-gray-50 hover:text-text-main transition-all shadow-sm text-sm font-medium">2</button>
+<button class="flex items-center justify-center size-9 rounded-lg border border-gray-200 bg-white text-text-secondary hover:bg-gray-50 hover:text-text-main transition-all shadow-sm text-sm font-medium">3</button>
+<span class="text-gray-400 px-1">...</span>
+<button class="flex items-center justify-center size-9 rounded-lg border border-gray-200 bg-white text-text-secondary hover:bg-gray-50 hover:text-text-main transition-all shadow-sm text-sm font-medium">12</button>
+<button class="flex items-center justify-center size-9 rounded-lg border border-gray-200 bg-white text-text-secondary hover:bg-gray-50 hover:text-text-main transition-all shadow-sm">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

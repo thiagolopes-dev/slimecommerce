@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Directory (Light Mode)</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#136dec",
+                        "background-light": "#F8F9FA",
+                        "surface-light": "#ffffff",
+                        "slate-850": "#1f2937",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                    boxShadow: {
+                        'soft': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                        'card': '0 0 0 1px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.04)',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light text-slate-800 font-display antialiased min-h-screen flex flex-col">
+<div class="layout-container flex h-full grow flex-col">
+<header class="sticky top-0 z-10 flex items-center justify-between whitespace-nowrap bg-surface-light px-6 py-4 shadow-sm border-b border-slate-100">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-slate-900">
+<div class="flex items-center justify-center rounded-lg bg-primary text-white p-2 shadow-sm">
+<span class="material-symbols-outlined text-2xl">grid_view</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight text-slate-800">E-Shop Admin</h2>
+</div>
+<div class="hidden md:flex w-full max-w-md items-center rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+<span class="material-symbols-outlined text-slate-400">search</span>
+<input class="w-full bg-transparent px-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none border-none focus:ring-0" placeholder="Search customers by name, email or ID..."/>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-slate-50 text-slate-500 transition-colors border border-transparent hover:border-slate-200">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-slate-50 text-slate-500 transition-colors border border-transparent hover:border-slate-200">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<button class="flex items-center gap-3 rounded-full pl-1 pr-4 py-1 hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+<div class="h-9 w-9 rounded-full bg-cover bg-center ring-2 ring-white shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCrfyahcoxuM2pd8YyraN4QNqDSyypmvJQJU_CeOx45pSMdUDmhPYE3xDrtCD6yKnWXXOjupQBTHIXDaBIfP2EfcO1Z2d6ho5KA98dOZlN6NzC9vVA29Ap1f4bMQS5wRq6kCYu1mGbDvUY55EiAxpdpkLSOfAW2wR_NSaTAadJa-GA6XCX7iHd24KFmekASfE5UtMwuLMlvAsvVn5v-iC-O0IvWg6hMG5rmtWwG1hMGKiwoCs9wSJpOlDErkWwdhQ8MtlN02aZHxQ");'></div>
+<div class="flex flex-col items-start hidden sm:flex">
+<span class="text-sm font-semibold text-slate-800 leading-none">Admin User</span>
+<span class="text-[10px] font-medium text-slate-500 mt-1">Super Admin</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
+</button>
+</div>
+</header>
+<main class="flex-1 px-4 py-8 md:px-8 lg:px-12 xl:px-16 bg-[#F8F9FA]">
+<div class="mx-auto max-w-7xl">
+<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Customer Directory</h1>
+<p class="text-slate-500 text-base font-medium">Manage client relationships and loyalty programs.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center gap-2 rounded-lg bg-white border border-slate-200 px-5 py-2.5 text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 hover:text-primary transition-all">
+<span class="material-symbols-outlined text-lg">download</span>
+<span>Export</span>
+</button>
+<button class="flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/30 hover:bg-blue-600 focus:ring-4 focus:ring-blue-500/30 transition-all">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>Add Customer</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-white p-4 rounded-xl shadow-card border border-slate-100 flex items-center gap-4">
+<div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 font-medium">Total Customers</p>
+<p class="text-xl font-bold text-slate-800">2,543</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl shadow-card border border-slate-100 flex items-center gap-4">
+<div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
+<span class="material-symbols-outlined">person_add</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 font-medium">New This Month</p>
+<p class="text-xl font-bold text-slate-800">+124</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl shadow-card border border-slate-100 flex items-center gap-4">
+<div class="p-3 bg-purple-50 text-purple-600 rounded-lg">
+<span class="material-symbols-outlined">workspace_premium</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 font-medium">Active VIPs</p>
+<p class="text-xl font-bold text-slate-800">86</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl shadow-card border border-slate-100 flex items-center gap-4">
+<div class="p-3 bg-amber-50 text-amber-600 rounded-lg">
+<span class="material-symbols-outlined">loyalty</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 font-medium">Points Issued</p>
+<p class="text-xl font-bold text-slate-800">1.2M</p>
+</div>
+</div>
+</div>
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4 bg-white p-2 rounded-xl border border-slate-100 shadow-sm">
+<div class="flex items-center gap-1 overflow-x-auto no-scrollbar">
+<button class="flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm">
+                            All Clients
+                        </button>
+<button class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+                            Individual
+                        </button>
+<button class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+                            Corporate
+                        </button>
+<button class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+                            VIP
+                        </button>
+</div>
+<div class="flex items-center gap-3 px-2">
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sort:</span>
+<div class="relative group">
+<button class="flex items-center gap-1 text-sm font-semibold text-slate-700 hover:text-primary transition-colors">
+                                Last Active
+                                <span class="material-symbols-outlined text-lg">keyboard_arrow_down</span>
+</button>
+</div>
+<div class="h-4 w-[1px] bg-slate-200 mx-1"></div>
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors rounded hover:bg-slate-50">
+<span class="material-symbols-outlined text-xl">filter_list</span>
+</button>
+</div>
+</div>
+<div class="space-y-3">
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-slate-100 bg-white p-4 shadow-card hover:shadow-soft hover:border-slate-200 transition-all cursor-pointer">
+<div class="flex items-center gap-4 sm:w-1/3">
+<div class="relative">
+<div class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white font-bold text-sm shadow-sm" data-alt="Avatar gradient">AF</div>
+<div class="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-green-500"></div>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base">Alice Freeman</h3>
+<p class="text-xs font-medium text-slate-500">alice.freeman@example.com</p>
+</div>
+</div>
+<div class="flex items-center gap-6 sm:w-1/3 justify-start sm:justify-center">
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Type</span>
+<div class="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 border border-blue-100">
+<span class="material-symbols-outlined text-[12px]">person</span>
+                                    Individual
+                                </div>
+</div>
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Status</span>
+<div class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 border border-emerald-100">
+                                    Active
+                                </div>
+</div>
+</div>
+<div class="flex items-center justify-between sm:w-1/3 gap-4">
+<div class="flex flex-col w-full max-w-[140px]">
+<div class="flex justify-between items-baseline mb-1">
+<span class="text-xs font-medium text-slate-500">Loyalty Pts</span>
+<span class="text-sm font-bold text-slate-900">1,250</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[45%] rounded-full"></div>
+</div>
+</div>
+<div class="text-right min-w-[80px]">
+<span class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Last Seen</span>
+<span class="text-sm font-medium text-slate-700">Oct 24</span>
+</div>
+<button class="text-slate-300 group-hover:text-primary transition-colors p-2 rounded-full hover:bg-blue-50">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-slate-100 bg-white p-4 shadow-card hover:shadow-soft hover:border-slate-200 transition-all cursor-pointer">
+<div class="flex items-center gap-4 sm:w-1/3">
+<div class="relative">
+<div class="h-12 w-12 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold shadow-sm">
+<span class="material-symbols-outlined text-xl">apartment</span>
+</div>
+<div class="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-green-500"></div>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base">TechSolutions Inc.</h3>
+<p class="text-xs font-medium text-slate-500">contact@techsolutions.com</p>
+</div>
+</div>
+<div class="flex items-center gap-6 sm:w-1/3 justify-start sm:justify-center">
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Type</span>
+<div class="inline-flex items-center gap-1 rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 border border-purple-100">
+<span class="material-symbols-outlined text-[12px]">business_center</span>
+                                    Corporate
+                                </div>
+</div>
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Status</span>
+<div class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 border border-emerald-100">
+                                    Active
+                                </div>
+</div>
+</div>
+<div class="flex items-center justify-between sm:w-1/3 gap-4">
+<div class="flex flex-col w-full max-w-[140px]">
+<div class="flex justify-between items-baseline mb-1">
+<span class="text-xs font-medium text-slate-500">Loyalty Pts</span>
+<span class="text-sm font-bold text-slate-900">15,400</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-purple-500 w-[85%] rounded-full"></div>
+</div>
+</div>
+<div class="text-right min-w-[80px]">
+<span class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Last Seen</span>
+<span class="text-sm font-medium text-slate-700">Oct 22</span>
+</div>
+<button class="text-slate-300 group-hover:text-primary transition-colors p-2 rounded-full hover:bg-blue-50">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-slate-100 bg-white p-4 shadow-card hover:shadow-soft hover:border-slate-200 transition-all cursor-pointer">
+<div class="flex items-center gap-4 sm:w-1/3">
+<div class="relative">
+<div class="h-12 w-12 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-sm">BS</div>
+<div class="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-slate-300"></div>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base">Bob Smith</h3>
+<p class="text-xs font-medium text-slate-500">bob.smith@email.net</p>
+</div>
+</div>
+<div class="flex items-center gap-6 sm:w-1/3 justify-start sm:justify-center">
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Type</span>
+<div class="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 border border-blue-100">
+<span class="material-symbols-outlined text-[12px]">person</span>
+                                    Individual
+                                </div>
+</div>
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Status</span>
+<div class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 border border-slate-200">
+                                    Inactive
+                                </div>
+</div>
+</div>
+<div class="flex items-center justify-between sm:w-1/3 gap-4">
+<div class="flex flex-col w-full max-w-[140px]">
+<div class="flex justify-between items-baseline mb-1">
+<span class="text-xs font-medium text-slate-500">Loyalty Pts</span>
+<span class="text-sm font-bold text-slate-900">300</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[10%] rounded-full"></div>
+</div>
+</div>
+<div class="text-right min-w-[80px]">
+<span class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Last Seen</span>
+<span class="text-sm font-medium text-slate-700">Aug 15</span>
+</div>
+<button class="text-slate-300 group-hover:text-primary transition-colors p-2 rounded-full hover:bg-blue-50">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-slate-100 bg-white p-4 shadow-card hover:shadow-soft hover:border-slate-200 transition-all cursor-pointer">
+<div class="flex items-center gap-4 sm:w-1/3">
+<div class="relative">
+<div class="h-12 w-12 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold shadow-sm">
+<span class="material-symbols-outlined text-xl">language</span>
+</div>
+<div class="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-green-500"></div>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base">Global Exports Ltd.</h3>
+<p class="text-xs font-medium text-slate-500">shipping@globalexports.com</p>
+</div>
+</div>
+<div class="flex items-center gap-6 sm:w-1/3 justify-start sm:justify-center">
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Type</span>
+<div class="inline-flex items-center gap-1 rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 border border-purple-100">
+<span class="material-symbols-outlined text-[12px]">business_center</span>
+                                    Corporate
+                                </div>
+</div>
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Status</span>
+<div class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 border border-emerald-100">
+                                    Active
+                                </div>
+</div>
+</div>
+<div class="flex items-center justify-between sm:w-1/3 gap-4">
+<div class="flex flex-col w-full max-w-[140px]">
+<div class="flex justify-between items-baseline mb-1">
+<span class="text-xs font-medium text-slate-500">Loyalty Pts</span>
+<span class="text-sm font-bold text-slate-900">8,900</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-purple-500 w-[65%] rounded-full"></div>
+</div>
+</div>
+<div class="text-right min-w-[80px]">
+<span class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Last Seen</span>
+<span class="text-sm font-medium text-slate-700">Oct 20</span>
+</div>
+<button class="text-slate-300 group-hover:text-primary transition-colors p-2 rounded-full hover:bg-blue-50">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-amber-200 bg-amber-50/30 p-4 shadow-card hover:shadow-soft hover:border-amber-300 transition-all cursor-pointer">
+<div class="flex items-center gap-4 sm:w-1/3">
+<div class="relative">
+<div class="h-12 w-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-sm">DP</div>
+<div class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[12px] text-yellow-600 shadow-sm border border-yellow-100">
+<span class="material-symbols-outlined text-[12px]">star</span>
+</div>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                                    Diana Prince 
+                                    <span class="text-[10px] bg-yellow-100 text-yellow-700 border border-yellow-200 px-1.5 py-0.5 rounded font-bold tracking-wide uppercase">VIP</span>
+</h3>
+<p class="text-xs font-medium text-slate-500">diana@themyscira.com</p>
+</div>
+</div>
+<div class="flex items-center gap-6 sm:w-1/3 justify-start sm:justify-center">
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Type</span>
+<div class="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 border border-blue-100">
+<span class="material-symbols-outlined text-[12px]">person</span>
+                                    Individual
+                                </div>
+</div>
+<div class="flex flex-col items-start gap-1">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Status</span>
+<div class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 border border-emerald-100">
+                                    Active
+                                </div>
+</div>
+</div>
+<div class="flex items-center justify-between sm:w-1/3 gap-4">
+<div class="flex flex-col w-full max-w-[140px]">
+<div class="flex justify-between items-baseline mb-1">
+<span class="text-xs font-medium text-slate-500">Loyalty Pts</span>
+<span class="text-sm font-bold text-slate-900">5,600</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-yellow-500 w-[75%] rounded-full"></div>
+</div>
+</div>
+<div class="text-right min-w-[80px]">
+<span class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Last Seen</span>
+<span class="text-sm font-medium text-slate-700">Oct 25</span>
+</div>
+<button class="text-slate-300 group-hover:text-primary transition-colors p-2 rounded-full hover:bg-amber-100/50">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
+<div class="text-sm text-slate-500">
+                        Showing <span class="font-bold text-slate-900">1</span> to <span class="font-bold text-slate-900">5</span> of <span class="font-bold text-slate-900">48</span> results
+                    </div>
+<div class="flex items-center gap-2">
+<button class="flex h-9 w-9 items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 transition-all shadow-sm">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white shadow-md hover:bg-blue-600 transition-colors">1</button>
+<button class="flex h-9 w-9 items-center justify-center rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors shadow-sm">2</button>
+<button class="flex h-9 w-9 items-center justify-center rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors shadow-sm">3</button>
+<span class="px-2 text-slate-400 font-bold">...</span>
+<button class="flex h-9 w-9 items-center justify-center rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors shadow-sm">8</button>
+<button class="flex h-9 w-9 items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<div aria-labelledby="slide-over-title" aria-modal="true" class="fixed inset-0 z-50 flex justify-end transition-opacity duration-300" role="dialog" style="display: none;"> 
+<div class="absolute inset-0 bg-slate-900/20 backdrop-blur-[2px] transition-opacity"></div>
+<div class="relative w-full max-w-md transform bg-white shadow-2xl transition-transform h-full overflow-y-auto border-l border-slate-100 flex flex-col">
+<div class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white/95 backdrop-blur px-6 py-5">
+<div>
+<h3 class="text-lg font-bold text-slate-900">Customer Details</h3>
+<p class="text-xs text-slate-500">View and edit customer information</p>
+</div>
+<button class="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-6 flex-1">
+<div class="mb-8 flex flex-col items-center text-center">
+<div class="relative mb-4">
+<div class="h-24 w-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white font-bold text-3xl shadow-lg border-4 border-white">AF</div>
+<div class="absolute bottom-1 right-1 h-5 w-5 rounded-full border-2 border-white bg-green-500"></div>
+</div>
+<h2 class="text-2xl font-bold text-slate-900 mb-1">Alice Freeman</h2>
+<div class="flex items-center gap-2 mb-4">
+<span class="text-sm font-medium text-slate-500">Individual Customer</span>
+<span class="h-1 w-1 rounded-full bg-slate-300"></span>
+<span class="text-sm text-slate-400">ID: #83920</span>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg shadow-md shadow-blue-200 hover:bg-blue-600 transition-colors">
+<span class="material-symbols-outlined text-lg">mail</span>
+                            Message
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+                            Edit
+                        </button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="rounded-xl bg-slate-50 p-4 border border-slate-100 text-center hover:bg-white hover:shadow-sm hover:border-slate-200 transition-all cursor-default">
+<div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Loyalty Points</div>
+<div class="text-2xl font-extrabold text-primary">1,250</div>
+<div class="text-xs font-medium text-emerald-600 mt-1 flex items-center justify-center gap-1 bg-emerald-50 rounded-full py-0.5 px-2 w-max mx-auto">
+<span class="material-symbols-outlined text-[12px]">trending_up</span>
+                            +12%
+                        </div>
+</div>
+<div class="rounded-xl bg-slate-50 p-4 border border-slate-100 text-center hover:bg-white hover:shadow-sm hover:border-slate-200 transition-all cursor-default">
+<div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Total Spent</div>
+<div class="text-2xl font-extrabold text-slate-900">$3,450</div>
+<div class="text-xs font-medium text-slate-500 mt-1">across 12 orders</div>
+</div>
+</div>
+<div class="space-y-8">
+<div>
+<h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-4 border-b border-slate-100 pb-2">Contact Information</h4>
+<div class="space-y-4">
+<div class="flex items-start gap-4">
+<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+<span class="material-symbols-outlined text-lg">mail</span>
+</div>
+<div>
+<p class="text-xs text-slate-400 font-bold uppercase mb-0.5">Email Address</p>
+<p class="text-sm font-medium text-slate-800 break-all">alice.freeman@example.com</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+<span class="material-symbols-outlined text-lg">call</span>
+</div>
+<div>
+<p class="text-xs text-slate-400 font-bold uppercase mb-0.5">Phone Number</p>
+<p class="text-sm font-medium text-slate-800">+1 (555) 123-4567</p>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
+<h4 class="text-xs font-bold uppercase tracking-wider text-slate-900">Addresses</h4>
+<button class="text-xs font-bold text-primary hover:text-blue-700">Add New</button>
+</div>
+<div class="space-y-3">
+<div class="rounded-xl border border-slate-200 p-4 relative group hover:border-primary hover:shadow-soft transition-all bg-white">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">home</span>
+<span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full uppercase tracking-wide">Primary</span>
+</div>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<p class="text-sm text-slate-600 leading-relaxed">
+                                    123 Maple Street, Apt 4B<br/>
+                                    Springfield, IL 62704<br/>
+                                    United States
+                                </p>
+</div>
+<div class="rounded-xl border border-slate-200 p-4 relative group hover:border-primary hover:shadow-soft transition-all bg-white">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">work</span>
+</div>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<p class="text-sm text-slate-600 leading-relaxed">
+                                    456 Corporate Blvd, Suite 200<br/>
+                                    Chicago, IL 60601<br/>
+                                    United States
+                                </p>
+</div>
+</div>
+</div>
+<div>
+<h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-4 border-b border-slate-100 pb-2">Recent Purchases</h4>
+<div class="relative pl-4 border-l-2 border-slate-100 space-y-6">
+<div class="relative">
+<div class="absolute -left-[21px] top-1.5 h-3 w-3 rounded-full border-2 border-white bg-primary shadow-sm"></div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-sm font-bold text-slate-900">Order #4923</span>
+<span class="text-xs text-slate-400 font-medium">Oct 24, 2023</span>
+</div>
+<p class="text-sm text-slate-600 mb-1">Wireless Headphones, Protective Case</p>
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold text-slate-900">$249.99</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">DELIVERED</span>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -left-[21px] top-1.5 h-3 w-3 rounded-full border-2 border-white bg-slate-300"></div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-sm font-bold text-slate-900">Order #4880</span>
+<span class="text-xs text-slate-400 font-medium">Sep 12, 2023</span>
+</div>
+<p class="text-sm text-slate-600 mb-1">Smart Watch Series 5</p>
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold text-slate-900">$399.00</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">DELIVERED</span>
+</div>
+</div>
+</div>
+<button class="mt-4 w-full text-center text-sm font-bold text-primary hover:text-blue-700 py-2 transition-colors">View All History</button>
+</div>
+</div>
+</div>
+<div class="sticky bottom-0 border-t border-slate-100 bg-white p-4">
+<button class="w-full rounded-xl bg-slate-900 py-3 text-sm font-bold text-white shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">shopping_bag</span>
+                    Create New Order
+                </button>
+</div>
+</div>
+</div>
+
+</body></html>
