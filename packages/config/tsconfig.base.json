@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./",
+    "paths": {
+      "@slimcommerce/ui": ["packages/ui"],
+      "@slimcommerce/types": ["packages/types"],
+      "@slimcommerce/config": ["packages/config"],
+      "@slimcommerce/database": ["packages/database"]
+    }
+  }
+}
