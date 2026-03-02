@@ -28,9 +28,6 @@ let CustomersService = class CustomersService {
     async update(id, data) {
         return this.prisma.customer.update({ where: { id }, data });
     }
-    async delete(id) {
-        return this.prisma.customer.delete({ where: { id } });
-    }
 };
 exports.CustomersService = CustomersService;
 exports.CustomersService = CustomersService = __decorate([

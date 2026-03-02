@@ -22,7 +22,7 @@ export class CustomersService {
     return this.prisma.customer.update({ where: { id }, data });
   }
 
-  async delete(id: number) {
-    return this.prisma.customer.delete({ where: { id } });
-  }
+  // async delete(id: number) {
+  //   return this.prisma.customer.delete({ where: { id } });
+  // }
 }
