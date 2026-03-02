@@ -3,20 +3,20 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id          Int      @id @default(autoincrement())
-  nome        String
-  email       String   @unique
-  datacriacao DateTime @default(now())
-  senha       String
-  status      Boolean
+model User {
+  id           Int      @id @default(autoincrement())
+  nome         String
+  email        String   @unique
+  dataCriacao  DateTime @default(now())
+  passwordHash String
+  status       Boolean
 }
 
-model Cliente {
+model Customer {
   id          Int      @id @default(autoincrement())
   cnpj        String   @unique
   razasocial  String
@@ -27,22 +27,24 @@ model Cliente {
   cidade      String
   uf          String
   status      Boolean
+  orders      Order[]
 }
 
-model Produto {
+model Product {
   id          Int      @id @default(autoincrement())
   descricao   String
   quantidade  Int
   sku         String   @unique
   status      Boolean
+  orders      Order[]
 }
 
-model PDV {
+model Order {
   id          Int      @id @default(autoincrement())
-  produto     Produto  @relation(fields: [produtoId], references: [id])
-  produtoId   Int
-  cliente     Cliente  @relation(fields: [clienteId], references: [id])
-  clienteId   Int
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   Int
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  Int
   data        DateTime @default(now())
   valor       Float
   pagamento   String

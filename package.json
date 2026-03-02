@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev:api": "npm --workspace=apps/api run dev",
-    "dev:admin": "npm --workspace=apps/admin run dev",
-    "dev:store": "npm --workspace=apps/store run dev",
-    "build": "npm run build --workspaces",
-    "lint": "npm run lint --workspaces"
+    "dev:api": "npx prisma generate --schema=apps/api/prisma/schema.prisma && nest start --watch",
+    "dev:admin": "cd apps/admin && npx next dev -p 3001",
+    "dev:store": "cd apps/store && npx next dev -p 3000",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
